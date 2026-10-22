@@ -2,175 +2,117 @@
 
 **The trusted link between landlords and tenants.**
 
-Tenexus is a real estate software development project for CMPSC 460. It aims to create a web application that connects landlords, tenants, and maintenance vendors while using AI to improve communication and request management.
+Tenexus is a CMPSC 460 programming languages project that demonstrates an AI-assisted landlord–tenant maintenance request system. Tenants submit requests through a Flask web interface. The system recommends whether to answer a question, refer a maintenance issue to a vendor, or escalate the request for landlord review.
 
-## Project Overview
+## Features
 
-Tenexus focuses on organizing tenant maintenance requests, property information, and communication between landlords and tenants.
+- Tenant portal for submitting and viewing maintenance requests
+- Landlord dashboard for reviewing AI routing decisions
+- AI-assisted request classification: `ANSWER`, `VENDOR`, or `ESCALATE`
+- Landlord approval and correction of recommendations
+- SQLite storage for requests, reviews, and audit history
+- Four programming-paradigm prototypes and two Racket DSLs
 
-The main problem is determining whether a tenant request should be:
-
-- **ANSWER:** Respond using an approved FAQ.
-- **VENDOR:** Route the request to a maintenance vendor.
-- **ESCALATE:** Send the request to the landlord for human review.
+The AI provides recommendations; uncertain or urgent requests are intended for human review. This is a course demonstration, not a production-ready property-management service.
 
 ## Technologies
 
-| Technology | Purpose |
-|---|---|
-| Python | Core application and programming prototypes |
-| Racket | Functional programming and DSL development |
-| SQLite | Database and declarative programming |
-| Flask | Planned web application |
-| HTML, CSS, JavaScript | Planned frontend |
-| Bootstrap | Planned interface styling |
-| uv | Python dependency management |
-| pytest | Automated Python testing |
-| RackUnit | Racket testing |
-| Git/GitHub | Version control |
+Python, Flask, SQLite, HTML, CSS, Racket, uv, pytest, and RackUnit.
 
 ## Project Structure
 
 ```text
 Tenexus/
 ├── src/
-│   ├── models/               # Python classes
-│   ├── prototypes/
-│   │   ├── imperative/       # Imperative programming
-│   │   └── object_oriented/  # Object-oriented programming
-│   ├── agents/               # AI agent documentation
-│   ├── dsl/
-│   │   ├── DSL_1.rkt         # KeyRules
-│   │   └── DSL_2.rkt         # KeyFAQ
-│   ├── webapp/               # Planned Flask application
-│   └── main.py
-├── tests/                    # Automated tests
-├── documentation/            # Documentation and AI agent results
+│   ├── webapp/              # Main Flask application, AI, database, and frontend
+│   │   ├── app.py
+│   │   ├── ai.py
+│   │   ├── models.py
+│   │   ├── workflow.py
+│   │   ├── repository.py
+│   │   ├── schema.sql
+│   │   ├── templates/
+│   │   ├── static/
+│   │   └── tests/
+│   ├── models/              # Standalone OOP coursework models
+│   ├── prototypes/          # Imperative, OOP, functional, and declarative examples
+│   ├── dsl/                 # KeyRules and KeyFAQ in Racket
+│   └── main.py              # Standalone OOP demonstration
+├── tests/                   # Coursework model and prototype tests
+├── documentation/           # AI agent development notes
 ├── pyproject.toml
 ├── uv.lock
 └── README.md
 ```
 
-## Installation
+The standalone `src/models/` classes support the coursework examples. The Flask application currently uses its own models in `src/webapp/models.py`.
 
-**Requirements:**
-- Python
-- uv
-- Racket / DrRacket
+## Setup
 
-Clone the repository:
+Requirements: Python 3.14 or newer, [uv](https://docs.astral.sh/uv/), and Racket for the Racket exercises.
 
-```bash
-git clone <repository-url>
+```powershell
+git clone <your-repository-url>
 cd Tenexus
-```
-
-Install Python dependencies:
-
-```bash
 uv sync
 ```
 
-## Running the Project
+## Run the Web Application
 
-Run the main Python program:
+From the repository root:
 
-```bash
+```powershell
+cd src/webapp
+uv run python app.py
+```
+
+Open **http://127.0.0.1:5000**. The application creates and seeds a local SQLite database if needed. Stop the server with **Ctrl+C**.
+
+## Run Tests
+
+From the repository root, test the coursework examples:
+
+```powershell
+uv run python -m pytest tests/ -v
+```
+
+To test the Flask application:
+
+```powershell
+cd src/webapp
+uv run python -m unittest discover -s tests -v
+```
+
+## Run Other Examples
+
+From the repository root:
+
+```powershell
 uv run python -m src.main
-```
-
-Run the imperative prototype:
-
-```bash
 uv run python -m src.prototypes.imperative.workflow
-```
-
-Run the object-oriented prototype:
-
-```bash
 uv run python -m src.prototypes.object_oriented.main
-```
-
-Run the Racket DSLs:
-
-```bash
+racket src/prototypes/functional/triage.rkt
 racket src/dsl/DSL_1.rkt
 racket src/dsl/DSL_2.rkt
 ```
 
-Run Python tests:
+The declarative prototype uses `src/prototypes/declarative/triage.sql` and has a Python test in the same directory.
 
-```bash
-uv run python -m pytest
-```
+## Programming Paradigms and DSLs
 
-Run Racket tests:
+- **Imperative (Python):** Routes requests with conditions and procedural logic.
+- **Object-oriented (Python):** Models properties, landlords, tenants, vendors, and requests.
+- **Functional (Racket):** Uses functions to process triage rules.
+- **Declarative (SQLite):** Expresses request rules using SQL.
+- **KeyRules (Racket):** Defines request-routing rules.
+- **KeyFAQ (Racket):** Defines approved answers to tenant FAQs.
 
-```bash
-raco test src/dsl/DSL_1.rkt
-raco test src/dsl/DSL_2.rkt
-```
+## Limitations
 
-## Programming Paradigms
-
-Tenexus demonstrates four programming paradigms:
-
-1. **Imperative:** Python request processing using variables, loops, and conditions.
-2. **Object-Oriented:** Python classes representing tenants, landlords, properties, vendors, and maintenance requests.
-3. **Functional:** Racket functions and immutable-data processing.
-4. **Declarative:** SQLite rules and queries.
-
-The completed application will integrate all four paradigms.
-
-## AI Agents
-
-Tenexus includes two AI assistants created using an AI bot platform.
-
-**Agent 1 — Company Structuring Assistant**
-
-Reviews departments, responsibilities, organizational structure, and development workflows.
-
-**Agent 2 — DSL Racket Builder**
-
-Assists with generating, reviewing, and testing Racket domain-specific languages.
-
-Both agents require human review of their outputs.
-
-## Racket DSLs
-
-**DSL_1.rkt — KeyRules**
-
-Defines maintenance request-routing rules. Emergencies are escalated, maintenance issues are routed to vendors, and unknown requests require human review.
-
-**DSL_2.rkt — KeyFAQ**
-
-Stores approved property-specific FAQ answers. Supports questions about trash collection and parking, with unknown questions escalated for human review.
-
-## Development Status
-
-**Implemented or drafted:**
-- Project structure and Python environment
-- Core object-oriented models
-- Imperative programming prototype
-- Object-oriented programming prototype
-- Two AI assistants
-- KeyRules and KeyFAQ DSL source code
-
-**Remaining work:**
-- Functional programming prototype
-- Declarative programming prototype
-- Flask web application and SQLite integration
-- Tenant-facing AI classification
-- Comprehensive testing and paradigm auditing
-- Final integration and demonstration
-
-## Project Goal
-
-Develop a functional, AI-assisted landlord-tenant management application that demonstrates multiple programming paradigms, domain-specific languages, and human oversight.
+This project uses demonstration data. It does not provide production authentication or secure multi-user deployment. AI classifications can be inaccurate and require human oversight. Run Flask locally for development only.
 
 ## Authors
 
-Stevens Blantrice and Ergi Demiraj
-
-**Course:** CMPSC 460 — Programming Languages  
-**Institution:** Pennsylvania State University
+Stevens Blantrice and Ergi Demiraj  
+CMPSC 460 — Programming Languages  
+Pennsylvania State University

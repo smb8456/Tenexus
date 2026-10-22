@@ -1,7 +1,7 @@
 [project]
 name = "tenexus"
 version = "0.1.0"
-description = "Add your description here"
+description = "AI-assisted landlord-tenant maintenance management system"
 readme = "README.md"
 authors = [
     { name = "smb8456", email = "smb8456@psu.edu" }
