@@ -3,7 +3,7 @@
 # tenant.py
 # ---------------------------------------------------------------------
 
-from src.maintenance_request import MaintenanceRequest
+from src.models.maintenance_request import MaintenanceRequest
 
 class Tenant:
     def __init__(self, name, email):
