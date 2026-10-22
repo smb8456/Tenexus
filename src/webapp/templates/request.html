@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}Request #{{ r.id }} - Tenexus{% endblock %}
+{% block content %}
+<h1>Request #{{ r.id }}</h1>
+<p class="muted">{{ r.tenant_name }} - {{ r.property_address }}</p>
+<div class="card">
+  <p class="label">You wrote</p>
+  <p>{{ r.message }}</p>
+</div>
+<div class="card result {{ r.route|lower }}">
+  <p class="label">Result: <span class="pill {{ r.route|lower }}">{{ r.route }}</span></p>
+  <p class="big">{{ r.tenant_message }}</p>
+</div>
+<div class="card">
+  <p class="label">How the AI handled it</p>
+  <ul class="plain">
+    <li>Category: <strong>{{ r.category }}</strong> (confidence {{ '%.0f' % (r.confidence * 100) }}%)</li>
+    <li>Urgency: <strong>{{ r.urgency }}/10</strong></li>
+    <li>Reason: {{ r.reason }}</li>
+    <li>Status: {{ r.status }}{% if r.landlord_route %} - landlord chose {{ r.landlord_route }}{% endif %}</li>
+  </ul>
+  <p class="label">Audit trail</p>
+  <ol class="audit">
+    {% for a in audit %}<li><strong>{{ a.step_name }}</strong> - {{ a.detail }}</li>{% endfor %}
+  </ol>
+</div>
+<p><a href="{{ url_for('portal') }}">Send another request</a></p>
+{% endblock %}

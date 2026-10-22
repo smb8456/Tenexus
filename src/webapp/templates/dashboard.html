@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block title %}Landlord dashboard - Tenexus{% endblock %}
+{% block content %}
+<h1>Landlord dashboard</h1>
+<form method="get" class="inline">
+  <label for="landlord_id">Account</label>
+  <select name="landlord_id" id="landlord_id" onchange="this.form.submit()">
+    {% for l in landlords %}<option value="{{ l.id }}" {% if l.id == landlord_id %}selected{% endif %}>{{ l.name }}</option>{% endfor %}
+  </select>
+  <noscript><button type="submit">Switch</button></noscript>
+</form>
+
+<section class="stats">
+  <div class="stat"><span class="num">{{ stats.ANSWER }}</span><span>Answered</span></div>
+  <div class="stat"><span class="num">{{ stats.VENDOR }}</span><span>Sent to vendor</span></div>
+  <div class="stat"><span class="num">{{ stats.ESCALATE }}</span><span>Escalated</span></div>
+  <div class="stat"><span class="num">{% if agreement.agreement_pct is not none %}{{ agreement.agreement_pct }}%{% else %}-{% endif %}</span>
+    <span>AI agreement ({{ agreement.reviewed }} reviewed)</span></div>
+</section>
+
+<h2>Needs your review</h2>
+{% if queue %}
+<table>
+  <tr><th>Urgency</th><th>Tenant</th><th>Request</th><th>AI route</th><th>Review</th></tr>
+  {% for q in queue %}
+  <tr>
+    <td><strong>{{ q.urgency }}</strong></td>
+    <td>{{ q.tenant_name }}<br><span class="muted">{{ q.property_address }}</span></td>
+    <td><a href="{{ url_for('request_page', request_id=q.id) }}">{{ q.message }}</a><br>
+        <span class="muted">{{ q.category }} ({{ '%.0f' % (q.confidence * 100) }}%) - {{ q.reason }}</span></td>
+    <td><span class="pill {{ q.route|lower }}">{{ q.route }}</span>{% if q.vendor_name %}<br><span class="muted">{{ q.vendor_name }}</span>{% endif %}</td>
+    <td>
+      <form method="post" action="{{ url_for('review_form', request_id=q.id) }}" class="review">
+        <input type="hidden" name="landlord_id" value="{{ landlord_id }}">
+        <button name="action" value="approve" type="submit">Approve AI</button>
+        <select name="route" aria-label="Correct route">
+          {% for r in routes %}<option value="{{ r }}" {% if r == q.route %}selected{% endif %}>{{ r }}</option>{% endfor %}
+        </select>
+        <button name="action" value="correct" type="submit" class="secondary">Correct</button>
+      </form>
+    </td>
+  </tr>
+  {% endfor %}
+</table>
+{% else %}<p class="muted">Nothing is waiting for you.</p>{% endif %}
+
+<h2>Recent requests</h2>
+{% if recent %}
+<table>
+  <tr><th>#</th><th>Tenant</th><th>Request</th><th>Route</th><th>Status</th></tr>
+  {% for r in recent %}
+  <tr>
+    <td><a href="{{ url_for('request_page', request_id=r.id) }}">{{ r.id }}</a></td>
+    <td>{{ r.tenant_name }}</td><td>{{ r.message }}</td>
+    <td><span class="pill {{ r.route|lower }}">{{ r.route }}</span></td><td>{{ r.status }}</td>
+  </tr>
+  {% endfor %}
+</table>
+{% else %}<p class="muted">No requests yet. Send one from the tenant portal.</p>{% endif %}
+{% endblock %}

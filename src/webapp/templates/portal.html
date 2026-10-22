@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Report a problem</h1>
+<p class="muted">Tell us what is wrong. You will get an answer, a contact for the right professional, or we will alert your landlord.</p>
+{% if error %}<p class="alert" role="alert">{{ error }}</p>{% endif %}
+<form method="post" action="{{ url_for('submit_form') }}" class="card">
+  <label for="tenant_id">Your account</label>
+  <select name="tenant_id" id="tenant_id" required>
+    {% for t in tenants %}
+      <option value="{{ t.id }}" {% if selected and selected|string == t.id|string %}selected{% endif %}>{{ t.name }} - {{ t.address }}</option>
+    {% endfor %}
+  </select>
+  <label for="message">What is the problem?</label>
+  <textarea name="message" id="message" rows="5" maxlength="1000" required placeholder="For example: my sink is leaking under the cabinet">{{ message }}</textarea>
+  <button type="submit">Send request</button>
+</form>
+{% endblock %}
