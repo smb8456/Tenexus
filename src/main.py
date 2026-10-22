@@ -1,8 +1,8 @@
 
-from models.tenant import Tenant
-from models.landlord import Landlord
-from models.property import Property
-from models.vendor import Vendor
+from src.models.tenant import Tenant
+from src.models.landlord import Landlord
+from src.models.property import Property
+from src.models.vendor import Vendor
 
 
 def main():

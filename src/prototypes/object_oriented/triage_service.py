@@ -34,6 +34,7 @@ class TriageService:
             return "VENDOR"
 
         elif category == "QUESTION":
+            request.answer()
             return "ANSWER"
 
         request.escalate()

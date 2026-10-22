@@ -17,5 +17,8 @@ class MaintenanceRequest:
     def escalate(self):
         self.status = "Escalated"
 
+    def answer(self):
+        self.status = "Answered"
+
     def complete(self):
         self.status = "Completed"
